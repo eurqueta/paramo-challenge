@@ -6,16 +6,17 @@ using Moq;
 using Sat.Recruitment.Api.Controllers;
 using Sat.Recruitment.BL.Business.Interfaces;
 using Sat.Recruitment.BL.DTO;
+using Sat.Recruitment.BL.Exceptions;
 using Sat.Recruitment.DAL.Exceptions;
 using Xunit;
 
 namespace Sat.Recruitment.Test
 {
     [CollectionDefinition("Tests", DisableParallelization = true)]
-    public class UnitTest1
+    public class UserControllerUnitTest
     {
         [Fact]
-        public void Test1()
+        public void NewUserShouldCreate()
         {
             var userServiceMock = new Mock<IUserService>(); 
             userServiceMock.Setup(service => service.CreateUser(It.IsAny<UserDTO>()));
@@ -30,11 +31,11 @@ namespace Sat.Recruitment.Test
         }
 
         [Fact]
-        public void Test2()
+        public void UserDuplicatedShouldFail()
         {
             var userServiceMock = new Mock<IUserService>();
             userServiceMock.Setup(service => service.CreateUser(It.IsAny<UserDTO>()))
-                .Throws(new DALException("The user is duplicated"));
+                .Throws(new BusinessException("") { Errors = "The user is duplicated" });
 
 
             var userController = new UsersController(userServiceMock.Object);
@@ -44,6 +45,38 @@ namespace Sat.Recruitment.Test
 
             Assert.Equal(false, result.IsSuccess);
             Assert.Equal("The user is duplicated", result.Errors);
+        }
+
+        [Fact]
+        public void InternalErrorShouldHideMessage()
+        {
+            var userServiceMock = new Mock<IUserService>();
+            userServiceMock.Setup(service => service.CreateUser(It.IsAny<UserDTO>()))
+                .Throws(new Exception("Error on database") );
+
+
+            var userController = new UsersController(userServiceMock.Object);
+
+            var result = userController.CreateUser("Agustina", "Agustina@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124").Result;
+
+
+            Assert.Equal(false, result.IsSuccess);
+            Assert.Equal("Internal Error", result.Errors);
+        }
+
+        [Fact]
+        public void EmptyNameShouldFail()
+        {
+            var userServiceMock = new Mock<IUserService>();
+
+
+            var userController = new UsersController(userServiceMock.Object);
+
+            var result = userController.CreateUser(null, "Agustina@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124").Result;
+
+
+            Assert.Equal(false, result.IsSuccess);
+            Assert.Equal("The name is required", result.Errors);
         }
     }
 }

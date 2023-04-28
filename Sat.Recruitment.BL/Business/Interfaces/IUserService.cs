@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static Sat.Recruitment.BL.UserService;
+using static Sat.Recruitment.BL.Business.UserService;
 
 namespace Sat.Recruitment.BL.Business.Interfaces
 {

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Sat.Recruitment.BL;
+using Sat.Recruitment.BL.Business;
 using Sat.Recruitment.BL.Business.Interfaces;
 using Sat.Recruitment.DAL;
 using Sat.Recruitment.DAL.Interfaces;

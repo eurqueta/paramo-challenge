@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sat.Recruitment.BL.Business.Interfaces;
 using Sat.Recruitment.BL.DTO;
+using Sat.Recruitment.BL.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -65,12 +66,19 @@ namespace Sat.Recruitment.Api.Controllers
                     IsSuccess = true,
                     Errors = "User Created"
                 };
-            }  catch (Exception ex) 
+            }  catch (BusinessException ex) 
             {
                 return new Result()
                 {
                     IsSuccess = false,
-                    Errors = ex.Message
+                    Errors = ex.Errors
+                };
+            } catch (Exception)
+            {
+                return new Result()
+                {
+                    IsSuccess = false,
+                    Errors = "Internal Error"
                 };
             }
           

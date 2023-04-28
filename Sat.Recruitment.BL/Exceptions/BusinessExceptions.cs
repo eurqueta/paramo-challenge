@@ -6,6 +6,7 @@ namespace Sat.Recruitment.BL.Exceptions
 {
     public class BusinessException : Exception
     {
+        public string Errors { get; set; }
         public BusinessException() { }
 
         public BusinessException(string message) : base (message) { }

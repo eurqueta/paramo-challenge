@@ -1,13 +1,14 @@
 ﻿using Sat.Recruitment.BL.Business.Interfaces;
 using Sat.Recruitment.BL.DTO;
 using Sat.Recruitment.BL.Exceptions;
+using Sat.Recruitment.DAL.Exceptions;
 using Sat.Recruitment.DAL.Interfaces;
 using Sat.Recruitment.DAL.Models;
 using System;
 
-namespace Sat.Recruitment.BL
+namespace Sat.Recruitment.BL.Business
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
 
@@ -73,11 +74,14 @@ namespace Sat.Recruitment.BL
             {
                 userRepository.CreateUser(user);
 
-            } catch (Exception ex)
-            {
-                throw new BusinessException("Error in create User", ex);
             }
-          
+            catch (DALException ex)
+            {
+                throw new BusinessException("Error in create User", ex) {
+                    Errors = ex.Message
+                };
+            }
+
 
         }
     }

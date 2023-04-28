@@ -5,7 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using Sat.Recruitment.BL;
+using Sat.Recruitment.BL.Business.Interfaces;
+using Sat.Recruitment.DAL;
+using Sat.Recruitment.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +30,11 @@ namespace Sat.Recruitment.Api
         {
             services.AddControllers();
             services.AddSwaggerGen();
+
+
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
